@@ -60,18 +60,33 @@ namespace FleetManager.API.Controllers
 
         // GET api/<VehicleController>/2
         [HttpGet("{id}")]
-        public VehicleModel Get(int id)
+        // another way is [Route("api/[Controller]/{name}")] then can
+        // do api/VehcileController/Kitt
+        public ActionResult<VehicleModel> Get(int id)
         {
-            return _vehiclesDatabase.SingleOrDefault(v => v.Id == id);
-        }
+            VehicleModel vehicle = _vehiclesDatabase.SingleOrDefault(v => v.Id == id);
 
+            if(vehicle == null)
+            {
+                return NotFound($"Vehicle not found with Id: {id}");
+                /* HOWTO
+                 *
+                 * { "error": "Vehicle not found with Id: 9000" }
+                 *
+                 */
+                //return NotFound(Json("Vehicle not found with Id", id));
+            }
+            else
+            {
+                return Ok(vehicle);
+            }
+        }
+        
         // POST api/<VehicleController>
         [HttpPost]
         public void Post([FromBody] VehicleModel vehicle)
         {
         }
-
-
 
         // PUT api/<VehicleController>/5
         [HttpPut("{id}")]
