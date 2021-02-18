@@ -23,6 +23,7 @@ namespace FleetManager.API
         public static void Main(string[] args)
         {
             // create host, build and run
+            // Build comes from IHostBuilder
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -30,6 +31,10 @@ namespace FleetManager.API
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    // we don't instantiate Startup class - we pass it as generic type arg
+                    // the methods in Startup (ConfigureSDervices, Configure) will be called
+                    // uses reflection mechanism (can google it, a way of determining methods of a class automagically)
+                    // typical IoC pattern, container
                     webBuilder.UseStartup<Startup>();
                 });
     }

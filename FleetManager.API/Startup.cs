@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 namespace FleetManager.API
 {
     // middleware in here
+    // name "Startup" is naming convention, can call it something else!
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -44,6 +45,8 @@ namespace FleetManager.API
         // this is where middleware is confiugured and applied - what and when
         // how your server will behave and process HTTP requests
         // eg. middleware registration
+        //
+        // the variable app is given by the IHostBuilder hostbuilder
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -58,6 +61,9 @@ namespace FleetManager.API
             app.UseRouting();
 
             app.UseAuthorization();
+
+            // can slot in your own custom middlewares here
+            app.UseTimestampMiddleware();
 
             app.UseEndpoints(endpoints =>
             {
