@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace FleetManager.API
 {
+    // this was added with right-click -> new item -> middleware
     // You may need to install the Microsoft.AspNetCore.Http.Abstractions package into your project
     public class TimestampMiddleware
     {
@@ -17,9 +18,11 @@ namespace FleetManager.API
             _next = next;
         }
 
+        // here is where we intercept the http request/response and can fiddle with it
         public Task Invoke(HttpContext httpContext)
         {
             httpContext.Response.Headers.Add("X-Timestamp", DateTime.Now.ToString());
+
             return _next(httpContext);
         }
     }
