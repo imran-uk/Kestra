@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using FleetManager.API.Models;
 
@@ -19,7 +20,10 @@ namespace FleetManager.API.Controllers
     {
         // lets create a manual database of vehicles as a private var
         // useful to do this when you have no actual database
-        private List<VehicleModel> _vehiclesDatabase = new List<VehicleModel>
+        //
+        // static is important to make variable persist to class
+        // between requests
+        private static List<VehicleModel> _vehiclesDatabase = new List<VehicleModel>
         {
             new VehicleModel
             {
@@ -50,7 +54,7 @@ namespace FleetManager.API.Controllers
 
         // GET: api/<VehicleController>
         [HttpGet]
-        public IEnumerable<VehicleModel> Get()
+        public IEnumerable<VehicleModel> GetAll()
         {
             //return new string[] { "value1", "value2" };
             return _vehiclesDatabase;
@@ -62,7 +66,7 @@ namespace FleetManager.API.Controllers
         [HttpGet("{id}")]
         // another way is [Route("api/[Controller]/{name}")] then can
         // do api/VehcileController/Kitt
-        public IActionResult Get(int id)
+        public IActionResult GetVehicle(int id)
         {
             VehicleModel vehicle = _vehiclesDatabase.SingleOrDefault(v => v.Id == id);
 
@@ -75,6 +79,8 @@ namespace FleetManager.API.Controllers
                  *
                  */
                 return NotFound(new {error = $"Vehicle not found with Id {id}"});
+                // better to do this...
+                // new MissingCarModel("reason")
             }
             else
             {
@@ -84,20 +90,46 @@ namespace FleetManager.API.Controllers
         
         // POST api/<VehicleController>
         [HttpPost]
-        public void Post([FromBody] VehicleModel vehicle)
+        //public IEnumerable<VehicleModel> Post([FromBody] VehicleModel vehicle)
+        public IActionResult Create([FromBody] VehicleModel vehicle)
         {
+            _vehiclesDatabase.Add(vehicle);
+            return Ok();
+
+            //return CreatedAtAction(nameof(Post), vehicle);
+            //return _vehiclesDatabase;
         }
 
-        // PUT api/<VehicleController>/5
+        // PUT api/<VehicleController>/400
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Update(int id, [FromBody] VehicleModel updates)
         {
+            // Overwrite from body
+            VehicleModel vehicle = _vehiclesDatabase.SingleOrDefault(v => v.Id == id);
+
+            if (vehicle == null)
+            {
+                return NotFound(new {error = $"Vehicle not found with Id {id}"});
+            }
+            else
+            {
+                // HOWTO
+                // why can't I do vehicle = model
+                vehicle.Make = updates.Make;
+                vehicle.Model = updates.Model;
+                vehicle.FriendlyName = updates.FriendlyName;
+
+                return Ok();
+            }
         }
 
         // DELETE api/<VehicleController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            _vehiclesDatabase.RemoveAll(v => v.Id == id);
+
+            return Ok();
         }
     }
 }
