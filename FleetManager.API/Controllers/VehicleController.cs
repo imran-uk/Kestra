@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using FleetManager.API.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Threading.Tasks;
-using FleetManager.API.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -59,9 +56,7 @@ namespace FleetManager.API.Controllers
             //return new string[] { "value1", "value2" };
             return _vehiclesDatabase;
         }
-
-
-
+        
         // GET api/<VehicleController>/2
         [HttpGet("{id}")]
         // another way is [Route("api/[Controller]/{name}")] then can
@@ -115,11 +110,20 @@ namespace FleetManager.API.Controllers
             {
                 // HOWTO
                 // why can't I do vehicle = model
+                // this does not work because i am over-writing the reference, not the value...
+                // cf. over-writing an address lkablke of evenlope, rather than contents of envelope
+                //vehicle = updates;
+
                 vehicle.Make = updates.Make;
                 vehicle.Model = updates.Model;
                 vehicle.FriendlyName = updates.FriendlyName;
+                vehicle.Mileage = updates.Mileage;
 
-                return Ok();
+                // TODO
+                // use this return which Piotr is doing
+                return CreatedAtAction(nameof(Update), new { id = id }, updates);
+
+                //return Ok();
             }
         }
 
@@ -127,9 +131,16 @@ namespace FleetManager.API.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            _vehiclesDatabase.RemoveAll(v => v.Id == id);
+            int removed = _vehiclesDatabase.RemoveAll(v => v.Id == id);
 
-            return Ok();
+            if (removed == 0)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok();
+            }
         }
     }
 }
