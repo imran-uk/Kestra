@@ -1,6 +1,6 @@
 using System;
 
-namespace FleetManager.API
+namespace FleetManager.API.Models
 {
     public class WeatherForecast
     {

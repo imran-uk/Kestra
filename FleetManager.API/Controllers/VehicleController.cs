@@ -23,6 +23,7 @@ namespace FleetManager.API.Controllers
         {
             new VehicleModel
             {
+                Id = 100,
                 Model = "Firebird", 
                 Make = "Pontiac", 
                 ProductionYear = 1986,
@@ -30,6 +31,7 @@ namespace FleetManager.API.Controllers
             },
             new VehicleModel
             {
+                Id = 200,
                 Model = "DMC-12", 
                 Make = "DeLorean", 
                 ProductionYear = 1984,
@@ -37,6 +39,7 @@ namespace FleetManager.API.Controllers
             },
             new VehicleModel
             {
+                Id = 300,
                 Model = "Civic", 
                 Make = "Honda", 
                 ProductionYear = 2007,
@@ -55,18 +58,20 @@ namespace FleetManager.API.Controllers
 
 
 
-        // GET api/<VehicleController>/5
+        // GET api/<VehicleController>/2
         [HttpGet("{id}")]
-        public string Get(int id)
+        public VehicleModel Get(int id)
         {
-            return "value";
+            return _vehiclesDatabase.SingleOrDefault(v => v.Id == id);
         }
 
         // POST api/<VehicleController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] VehicleModel vehicle)
         {
         }
+
+
 
         // PUT api/<VehicleController>/5
         [HttpPut("{id}")]

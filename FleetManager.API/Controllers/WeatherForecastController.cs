@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FleetManager.API.Models;
 
 namespace FleetManager.API.Controllers
 {
