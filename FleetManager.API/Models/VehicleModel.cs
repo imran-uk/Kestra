@@ -5,19 +5,23 @@ namespace FleetManager.API.Models
     // can get inmspioration from WeatherForecast type
     public class VehicleModel
     {
+        // see note about int and defasult value 0 as below
         [Required]
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string Model { get; set; }
         public string Make { get; set; }
 
         // use my custom validator attr :)
-        [ProductionYear(AllowShortNotation = true)]
+        //[ProductionYear(AllowShortNotation = true)]
         public int ProductionYear { get; set; }
 
         [Required(AllowEmptyStrings = false)]
         public string FriendlyName { get; set; }
 
+        // note that we have to make int fields ? so that it "may be null"
+        // otherwise a default value (like 0 in this case)
+        // will be set and therefore the validation will not kick-in
         [Required]
-        public int Mileage { get; set; }
+        public int? Mileage { get; set; }
     }
 }

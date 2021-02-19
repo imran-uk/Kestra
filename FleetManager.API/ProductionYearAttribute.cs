@@ -11,6 +11,9 @@ namespace FleetManager.API
     {
         public bool AllowShortNotation { get; set; }
 
+        // TODO
+        // make this more elegant, see Piotr code
+        // github https://github.com/PioterB/NetCoreWebApi20210218
         public override bool IsValid(object value)
         {
             // logic here to decide if production year is valid
