@@ -24,4 +24,12 @@ namespace FleetManager.API.Models
         [Required]
         public int? Mileage { get; set; }
     }
+
+    // Piotr has a static class VehicleExtensions here
+    // It has Extension method in it
+    // Fluent API, method chaining
+    //
+    // benefits are that it keeps main class simple, only exports what is needed
+    //
+    // ToModel method (from VehicleCreate to VehicleModel)
 }

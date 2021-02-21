@@ -29,6 +29,7 @@ namespace FleetManager.API
         // dep inj stuff, logic pr0viding some contract or functionality
         // entry point for dep inj mechanisms
         // setup the container
+        // we register all services here
         // IoC
         // eg. 
         public void ConfigureServices(IServiceCollection services)
