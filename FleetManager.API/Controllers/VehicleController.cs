@@ -20,6 +20,8 @@ namespace FleetManager.API.Controllers
         //
         // static is important to make variable persist to class
         // between requests
+        //
+        // XXX this is a useful trick in other experiments!
         private static List<VehicleModel> _vehiclesDatabase = new List<VehicleModel>
         {
             new VehicleModel
@@ -48,7 +50,9 @@ namespace FleetManager.API.Controllers
             }
         };
 
-
+        // TODO
+        // review notes on controller return types and when to use each one
+        // eg. Task, ActionResult etc
         // GET: api/<VehicleController>
         [HttpGet]
         public IEnumerable<VehicleModel> GetAll()
@@ -58,6 +62,9 @@ namespace FleetManager.API.Controllers
         }
         
         // GET api/<VehicleController>/2
+        // TODO
+        // refactor this to represent each car as aGuid and then see what 
+        // {id:guid} versus {id:string} does
         [HttpGet("{id}")]
         // another way is [Route("api/[Controller]/{name}")] then can
         // do api/VehcileController/Kitt
@@ -95,6 +102,9 @@ namespace FleetManager.API.Controllers
             //return _vehiclesDatabase;
         }
 
+        // TODO
+        // see how piotr did it in his solution
+        // https://github.com/PioterB/NetCoreWebApi20210218
         // PUT api/<VehicleController>/400
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] VehicleModel updates)

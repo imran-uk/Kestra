@@ -32,6 +32,16 @@ namespace FleetManager.API
         // we register all services here
         // IoC
         // eg. 
+        // TODO
+        // try to understand the diff between AddScoped, AddTransient and AddSingleton
+        // see if there is real-world examples
+        //
+        //
+        // then
+        // * add some simple authorization (maybe a key)
+        // * add UnitTest project and write some simple tests for the controllers
+        // focus on guidelines for happy/unhappy path -  see examples in Piotr code
+        // https://github.com/PioterB/NetCoreWebApi20210218
         public void ConfigureServices(IServiceCollection services)
         {
 
