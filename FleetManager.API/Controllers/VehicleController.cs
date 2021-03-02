@@ -63,12 +63,15 @@ namespace FleetManager.API.Controllers
         
         // GET api/<VehicleController>/2
         // TODO
-        // refactor this to represent each car as aGuid and then see what 
+        // refactor this to represent each car as a Guid and then see what 
         // {id:guid} versus {id:string} does
+        //
+        // with id:guid as path of https://localhost:5001/api/Vehicle/100
+        // does not find the car
         [HttpGet("{id}")]
         // another way is [Route("api/[Controller]/{name}")] then can
-        // do api/VehcileController/Kitt
-        public IActionResult GetVehicle(int id)
+        // do api/VehicleController/Kitt
+        public ObjectResult GetVehicle(int id)
         {
             VehicleModel vehicle = _vehiclesDatabase.SingleOrDefault(v => v.Id == id);
 
@@ -80,9 +83,10 @@ namespace FleetManager.API.Controllers
                  * { "error": "Vehicle not found with Id: 9000" }
                  *
                  */
-                return NotFound(new {error = $"Vehicle not found with Id {id}"});
+                //return NotFound(new {error = $"Vehicle not found with Id {id}"});
                 // better to do this...
                 // new MissingCarModel("reason")
+                return NotFound(new MissingVehicle($"Vehicle not found with Id {id}"));
             }
             else
             {
@@ -96,6 +100,7 @@ namespace FleetManager.API.Controllers
         public IActionResult Create([FromBody] VehicleModel vehicle)
         {
             _vehiclesDatabase.Add(vehicle);
+
             return Ok();
 
             //return CreatedAtAction(nameof(Post), vehicle);
@@ -121,7 +126,7 @@ namespace FleetManager.API.Controllers
                 // HOWTO
                 // why can't I do vehicle = model
                 // this does not work because i am over-writing the reference, not the value...
-                // cf. over-writing an address lkablke of evenlope, rather than contents of envelope
+                // cf. over-writing an address label of evenlope, rather than contents of envelope
                 //vehicle = updates;
 
                 vehicle.Make = updates.Make;
@@ -152,5 +157,17 @@ namespace FleetManager.API.Controllers
                 return Ok();
             }
         }
+    }
+
+    // TODO
+    // this probably belongs in Models top-level dir
+    public class MissingVehicle
+    {
+        public MissingVehicle(string reason)
+        {
+            Error = reason + " [from model]";
+        }
+
+        public string Error { get; set; }
     }
 }
