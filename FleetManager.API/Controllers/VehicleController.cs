@@ -1,4 +1,5 @@
-﻿using FleetManager.API.Models;
+﻿using System;
+using FleetManager.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,11 +23,17 @@ namespace FleetManager.API.Controllers
         // between requests
         //
         // XXX this is a useful trick in other experiments!
+        //
+        // TODO
+        //
+        // Convert to using an in-Memory database for the vehicles database, for hints
+        // see how it's done in 
+        // FleetManagement.Security.UsersRepository class in the project C:\Code\NetCoreWebApi20210218
         private static List<VehicleModel> _vehiclesDatabase = new List<VehicleModel>
         {
             new VehicleModel
             {
-                Id = 100,
+                Id = new Guid("1c341908-e8ed-4d99-83f9-2808a8f4ef6e"),
                 Model = "Firebird", 
                 Make = "Pontiac", 
                 ProductionYear = 1986,
@@ -34,7 +41,7 @@ namespace FleetManager.API.Controllers
             },
             new VehicleModel
             {
-                Id = 200,
+                Id = new Guid("5fcaa7ac-666f-4513-b631-ad0317d3b673"),
                 Model = "DMC-12", 
                 Make = "DeLorean", 
                 ProductionYear = 1984,
@@ -42,7 +49,7 @@ namespace FleetManager.API.Controllers
             },
             new VehicleModel
             {
-                Id = 300,
+                Id = new Guid("7a916ca7-4e81-42a4-b7f0-27ab2d202867"),
                 Model = "Civic", 
                 Make = "Honda", 
                 ProductionYear = 2007,
@@ -71,7 +78,7 @@ namespace FleetManager.API.Controllers
         [HttpGet("{id}")]
         // another way is [Route("api/[Controller]/{name}")] then can
         // do api/VehicleController/Kitt
-        public ObjectResult GetVehicle(int id)
+        public ObjectResult GetVehicle(Guid id)
         {
             VehicleModel vehicle = _vehiclesDatabase.SingleOrDefault(v => v.Id == id);
 
@@ -112,7 +119,7 @@ namespace FleetManager.API.Controllers
         // https://github.com/PioterB/NetCoreWebApi20210218
         // PUT api/<VehicleController>/400
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] VehicleModel updates)
+        public IActionResult Update(Guid id, [FromBody] VehicleModel updates)
         {
             // Overwrite from body
             VehicleModel vehicle = _vehiclesDatabase.SingleOrDefault(v => v.Id == id);
@@ -144,7 +151,7 @@ namespace FleetManager.API.Controllers
 
         // DELETE api/<VehicleController>/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(Guid id)
         {
             int removed = _vehiclesDatabase.RemoveAll(v => v.Id == id);
 

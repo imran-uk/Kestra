@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace FleetManager.API.Models
 {
@@ -7,7 +8,7 @@ namespace FleetManager.API.Models
     {
         // see note about int and defasult value 0 as below
         [Required]
-        public int? Id { get; set; }
+        public Guid Id { get; set; }
         public string Model { get; set; }
         public string Make { get; set; }
 
