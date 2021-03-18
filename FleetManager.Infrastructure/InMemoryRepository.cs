@@ -24,16 +24,19 @@ namespace FleetManager.Infrastructure
             _memory = vehicleList.ToDictionary(x => x.Id, x => x);
         }
 
-        // need a way to get all items from the repo (and loopable)
-        public IEnumerable<VehicleModel> Get()
-        {
-            return _memory.Values.ToArray();
-        }
-
-        // need a way to get a single item
         public VehicleModel Get(Guid id)
         {
-            return _memory[id];
+            try
+            {
+                return _memory[id];
+            }
+            catch(Exception exception)
+            {
+                // TODO
+                // this will actually raised a KeyNotFoundException 
+                // I want to add a logger here, i think this is injected at contructor level, see pattern
+                return null;
+            }
         }
 
         public List<VehicleModel> GetAll()

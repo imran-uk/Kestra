@@ -70,36 +70,6 @@ namespace FleetManager.API.Controllers
                 _rhonda
             });
 
-        /*
-        private static List<VehicleModel> _vehiclesDatabase = new List<VehicleModel>
-        {
-            new VehicleModel
-            {
-                Id = new Guid("1c341908-e8ed-4d99-83f9-2808a8f4ef6e"),
-                Model = "Firebird", 
-                Make = "Pontiac", 
-                ProductionYear = 1986,
-                FriendlyName = "KITT"
-            },
-            new VehicleModel
-            {
-                Id = new Guid("5fcaa7ac-666f-4513-b631-ad0317d3b673"),
-                Model = "DMC-12", 
-                Make = "DeLorean", 
-                ProductionYear = 1984,
-                FriendlyName = "Time Machine"
-            },
-            new VehicleModel
-            {
-                Id = new Guid("7a916ca7-4e81-42a4-b7f0-27ab2d202867"),
-                Model = "Civic", 
-                Make = "Honda", 
-                ProductionYear = 2007,
-                FriendlyName = "Rhonda"
-            }
-        };
-        */
-
         // TODO
         // review notes on controller return types and when to use each one
         // eg. Task, ActionResult etc
@@ -107,9 +77,7 @@ namespace FleetManager.API.Controllers
         [HttpGet]
         public IEnumerable<VehicleModel> GetAll()
         {
-            //return new string[] { "value1", "value2" };
 
-            // TODO need to implkement this!
             return _vehicleDatabaseInMemoryRepository.GetAll();
         }
         
@@ -125,8 +93,8 @@ namespace FleetManager.API.Controllers
         // do api/VehicleController/Kitt
         public ObjectResult GetVehicle(Guid id)
         {
-            VehicleModel vehicle = _vehicleDatabaseInMemoryRepository.GetAll().SingleOrDefault(v => v.Id == id);
-
+            VehicleModel vehicle = _vehicleDatabaseInMemoryRepository.Get(id);
+            
             if(vehicle == null)
             {
                 //return NotFound($"Vehicle not found with Id: {id}");
