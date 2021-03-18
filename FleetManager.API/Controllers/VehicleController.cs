@@ -1,8 +1,11 @@
-﻿using System;
-using FleetManager.API.Models;
+﻿using FleetManager.Domain;
+using FleetManager.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -19,16 +22,55 @@ namespace FleetManager.API.Controllers
         // lets create a manual database of vehicles as a private var
         // useful to do this when you have no actual database
         //
-        // static is important to make variable persist to class
-        // between requests
+        // static is important to make variable persist to class between requests 
+        // 
         //
         // XXX this is a useful trick in other experiments!
         //
         // TODO
-        //
-        // Convert to using an in-Memory database for the vehicles database, for hints
+        // Convert to using an in-Memory database for the vehicles database, for hints 
         // see how it's done in 
         // FleetManagement.Security.UsersRepository class in the project C:\Code\NetCoreWebApi20210218
+        //
+        // so I have created InMemoryRepository in FleetManager.Infrastructure, how to wire it up here?
+        
+        // seed the inMemoryRepo
+        private static VehicleModel _kitt = new VehicleModel
+        {
+            Id = new Guid("1c341908-e8ed-4d99-83f9-2808a8f4ef6e"),
+            Model = "Firebird",
+            Make = "Pontiac",
+            ProductionYear = 1986,
+            FriendlyName = "KITT"
+        };
+
+        private static VehicleModel _delorean = new VehicleModel
+        {
+            Id = new Guid("5fcaa7ac-666f-4513-b631-ad0317d3b673"),
+            Model = "DMC-12",
+            Make = "DeLorean",
+            ProductionYear = 1984,
+            FriendlyName = "Time Machine"
+        };
+
+        private static VehicleModel _rhonda = new VehicleModel
+        {
+            Id = new Guid("7a916ca7-4e81-42a4-b7f0-27ab2d202867"),
+            Model = "Civic",
+            Make = "Honda",
+            ProductionYear = 2007,
+            FriendlyName = "Rhonda"
+        };
+
+        private static InMemoryRepository _vehicleDatabaseInMemoryRepository =
+            new InMemoryRepository(new List<VehicleModel>
+            {
+                _kitt,
+                _delorean,
+                _rhonda
+            });
+
+        /*
         private static List<VehicleModel> _vehiclesDatabase = new List<VehicleModel>
         {
             new VehicleModel
@@ -56,6 +98,7 @@ namespace FleetManager.API.Controllers
                 FriendlyName = "Rhonda"
             }
         };
+        */
 
         // TODO
         // review notes on controller return types and when to use each one
@@ -65,7 +108,9 @@ namespace FleetManager.API.Controllers
         public IEnumerable<VehicleModel> GetAll()
         {
             //return new string[] { "value1", "value2" };
-            return _vehiclesDatabase;
+
+            // TODO need to implkement this!
+            return _vehicleDatabaseInMemoryRepository.GetAll();
         }
         
         // GET api/<VehicleController>/2
@@ -80,7 +125,7 @@ namespace FleetManager.API.Controllers
         // do api/VehicleController/Kitt
         public ObjectResult GetVehicle(Guid id)
         {
-            VehicleModel vehicle = _vehiclesDatabase.SingleOrDefault(v => v.Id == id);
+            VehicleModel vehicle = _vehicleDatabaseInMemoryRepository.GetAll().SingleOrDefault(v => v.Id == id);
 
             if(vehicle == null)
             {
@@ -100,13 +145,13 @@ namespace FleetManager.API.Controllers
                 return Ok(vehicle);
             }
         }
-        
+
         // POST api/<VehicleController>
         [HttpPost]
         //public IEnumerable<VehicleModel> Post([FromBody] VehicleModel vehicle)
         public IActionResult Create([FromBody] VehicleModel vehicle)
         {
-            _vehiclesDatabase.Add(vehicle);
+            _vehicleDatabaseInMemoryRepository.Add(vehicle);
 
             return Ok();
 
@@ -122,7 +167,7 @@ namespace FleetManager.API.Controllers
         public IActionResult Update(Guid id, [FromBody] VehicleModel updates)
         {
             // Overwrite from body
-            VehicleModel vehicle = _vehiclesDatabase.SingleOrDefault(v => v.Id == id);
+            VehicleModel vehicle = _vehicleDatabaseInMemoryRepository.GetAll().SingleOrDefault(v => v.Id == id);
 
             if (vehicle == null)
             {
@@ -153,7 +198,7 @@ namespace FleetManager.API.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
-            int removed = _vehiclesDatabase.RemoveAll(v => v.Id == id);
+            int removed = _vehicleDatabaseInMemoryRepository.GetAll().RemoveAll(v => v.Id == id);
 
             if (removed == 0)
             {

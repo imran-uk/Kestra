@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FleetManager.API\FleetManager.API.csproj" />
+    <ProjectReference Include="..\FleetManager.Domain\FleetManager.Domain.csproj" />
   </ItemGroup>
 
 </Project>

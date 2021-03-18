@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace FleetManager.API.Models
+namespace FleetManager.Domain
 {
     // can get inmspioration from WeatherForecast type
     public class VehicleModel
