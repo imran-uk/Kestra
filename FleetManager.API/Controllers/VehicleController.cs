@@ -5,6 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using FluentValidation.Results;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -15,6 +18,8 @@ using System.Runtime.CompilerServices;
 
 namespace FleetManager.API.Controllers
 {
+
+
     [Route("api/[controller]")]
     [ApiController]
     public class VehicleController : ControllerBase
@@ -33,7 +38,9 @@ namespace FleetManager.API.Controllers
         // FleetManagement.Security.UsersRepository class in the project C:\Code\NetCoreWebApi20210218
         //
         // so I have created InMemoryRepository in FleetManager.Infrastructure, how to wire it up here?
-        
+
+
+
         // seed the inMemoryRepo
         private static VehicleModel _kitt = new VehicleModel
         {
@@ -70,6 +77,15 @@ namespace FleetManager.API.Controllers
                 _rhonda
             });
 
+        private readonly ILogger _logger;
+        private readonly IConfiguration Configuration;
+
+        public VehicleController(ILogger<VehicleController> logger, IConfiguration configuration)
+        {
+            _logger = logger;
+            Configuration = configuration;
+        }
+
         // TODO
         // review notes on controller return types and when to use each one
         // eg. Task, ActionResult etc
@@ -77,6 +93,8 @@ namespace FleetManager.API.Controllers
         [HttpGet]
         public IEnumerable<VehicleModel> GetAll()
         {
+            // TODO where the frak is this visiable?!!
+            _logger.LogInformation("made a call to get ALL vehicles");
 
             return _vehicleDatabaseInMemoryRepository.GetAll();
         }
@@ -119,9 +137,21 @@ namespace FleetManager.API.Controllers
         //public IEnumerable<VehicleModel> Post([FromBody] VehicleModel vehicle)
         public IActionResult Create([FromBody] VehicleModel vehicle)
         {
-            _vehicleDatabaseInMemoryRepository.Add(vehicle);
+            // TODO
+            // lets use FluentValidation here to validate a vehicle before we add it to the database
+            VehicleValidator vehicleValidator = new VehicleValidator();
+            ValidationResult result = vehicleValidator.Validate(vehicle);
 
-            return Ok();
+            if (result.IsValid)
+            {
+                _vehicleDatabaseInMemoryRepository.Add(vehicle);
+                return Ok();
+            }
+            else
+            {
+                string validationErrors = result.ToString();
+                return BadRequest(validationErrors);
+            }
 
             //return CreatedAtAction(nameof(Post), vehicle);
             //return _vehiclesDatabase;
@@ -176,6 +206,43 @@ namespace FleetManager.API.Controllers
             {
                 return Ok();
             }
+        }
+
+        [HttpGet]
+        [Route("/ListConfigProviders")]
+        public ActionResult ListConfigProviders()
+        {
+            var configProviders = new Index2Model(Configuration).OnGet();
+
+            /*
+             Outputs this:
+
+            Microsoft.Extensions.Configuration.ChainedConfigurationProvider
+            JsonConfigurationProvider for 'appsettings.json' (Optional)
+            JsonConfigurationProvider for 'appsettings.Development.json' (Optional)
+            JsonConfigurationProvider for 'secrets.json' (Optional)
+            EnvironmentVariablesConfigurationProvider
+            CommandLineConfigurationProvider
+
+             */
+
+            return Ok(configProviders.Content.ToString());
+        }
+
+        [HttpGet]
+        [Route("/ListSecurityOptions")]
+        public ActionResult ListSecurityOptions()
+        {
+            var securityOptions = new Test22Model(Configuration).OnGet();
+
+            /*
+             Outputs this:
+
+            Password: sdgfsdg43223hfg 
+            Port: 2222
+             */
+
+            return Ok(securityOptions.Content.ToString());
         }
     }
 

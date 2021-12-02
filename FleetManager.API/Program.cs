@@ -15,7 +15,7 @@ namespace FleetManager.API
     //
     // it is all defined in code to support cross-platform aspect
     //
-    // it is the vanbeer over the runtime (exec service on windows, daemon on linux)
+    // it is the veneer over the runtime (exec service on windows, daemon on linux)
     // see: MSDN for moar
     public class Program
     {
@@ -29,6 +29,11 @@ namespace FleetManager.API
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.AddConsole();
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     // we don't instantiate Startup class - we pass it as generic type arg

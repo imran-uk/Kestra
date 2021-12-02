@@ -50,6 +50,9 @@ namespace FleetManager.API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FleetManager.API", Version = "v1" });
             });
+
+            //var configureProviders = new Index2Model(Configuration).OnGet();
+            new Index2Model(Configuration).OnGet();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
