@@ -139,6 +139,12 @@ namespace FleetManager.API.Controllers
         {
             // TODO
             // lets use FluentValidation here to validate a vehicle before we add it to the database
+            
+            // Is this a good pattern? SOLID?
+            // Try to inject the validator?
+            //
+            // How about throwing an exception
+            // see https://docs.fluentvalidation.net/en/latest/start.html#throwing-exceptions
             VehicleValidator vehicleValidator = new VehicleValidator();
             ValidationResult result = vehicleValidator.Validate(vehicle);
 
