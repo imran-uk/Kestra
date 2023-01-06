@@ -35,7 +35,8 @@ namespace FleetManager.Infrastructure
                 // TODO
                 // this will actually raised a KeyNotFoundException 
                 // I want to add a logger here, i think this is injected at contructor level, see pattern
-                return null;
+
+                throw new KeyNotFoundException(exception.Message);
             }
         }
 
